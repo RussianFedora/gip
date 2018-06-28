@@ -27,15 +27,15 @@ touch configure
 chmod +x configure
 sed -i 's|CFLAGS="-std=c++11|CFLAGS="$(echo $CFLAGS) -std=c++11|' build.sh
 sed -i 's|LFLAGS=`pkg-config $REQUIRED_LIBS --libs`|LFLAGS="$(echo $LDFLAGS) `pkg-config $REQUIRED_LIBS --libs`"|' build.sh
+sed -i "s|INST_LIBDIR=\"\$INST_PREFIX/lib/\$EXECUTABLE\"|INST_LIBDIR=\"\$INST_PREFIX/share/\$EXECUTABLE\"|" build.sh
+sed -i "s|INST_PIXMAPDIR=\"\$INST_PREFIX/lib/\$EXECUTABLE\"|INST_PIXMAPDIR=\"\$INST_PREFIX/share/\$EXECUTABLE\"|" build.sh
 
 %build
 %configure
-export LIBDIR=lib
 ./build.sh --prefix %{_prefix}
 
 %install
 mkdir -p %{buildroot}%{_prefix}
-export LIBDIR=lib
 ./build.sh --install --prefix %{buildroot}%{_prefix}
 %find_lang %{name}
 
@@ -46,7 +46,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 %doc AUTHORS ChangeLog
 %license COPYING
 %{_bindir}/%{name}
-%{_usr}/lib/%{name}
+%{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*x*/apps/calc.png
 %{_datadir}/mime/packages/%{name}.xml
